@@ -1,6 +1,10 @@
+import os
+import signal
+import errno
 import math
-from itertools import combinations
 import random
+from itertools import combinations
+from functools import wraps
 
 
 # binominal coefficent
@@ -19,6 +23,7 @@ def gvb(n, k, d):
     columns = 0
     for i in range(d - 1):
         columns += c_n_k(n - 1, i)
+    # print(columns, (1 << (n - k)))
     return columns < (1 << (n - k))
 
 
@@ -92,4 +97,21 @@ def random_error(n, t, length):
     return errors
 
 
+def timeout(seconds=100, error_message=os.strerror(errno.ETIME)):
+    def decorator(func):
+        def _handle_timeout(signum, frame):
+            raise TimeoutError(error_message)
+
+        def wrapper(*args, **kwargs):
+            signal.signal(signal.SIGALRM, _handle_timeout)
+            signal.alarm(seconds)
+            try:
+                result = func(*args, **kwargs)
+            finally:
+                signal.alarm(0)
+            return result
+
+        return wraps(func)(wrapper)
+
+    return decorator
 

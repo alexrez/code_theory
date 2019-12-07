@@ -25,6 +25,11 @@ class LinearCode():
         illegal_vectors = set(map(func.reduce_xor, linear_comb))
         legal_vectors = [i for i in range(1, (1 << self._r)) if i not in illegal_vectors]
         for i in range(self._k):
+            if not legal_vectors:
+                i = 0
+                illegal_vectors = set(map(func.reduce_xor, linear_comb))
+                legal_vectors = [i for i in range(1, (1 << self._r)) if i not in illegal_vectors]
+
             new_vector = legal_vectors[random.randint(0, len(legal_vectors) - 1)]
             self._A_matrix_t.append(new_vector)
 
