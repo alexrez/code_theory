@@ -42,13 +42,22 @@ def get_combinations(d, r):
     return el_combinations
 
 
-def update_combinations(elem, vector_to_decrease, vector_to_increase):
+# def update_combinations(elem, vector_to_decrease, vector_to_increase):
+#     tmp_set = set()
+#     for vec in vector_to_increase:
+#         new_comb = elem ^ vec
+#         tmp_set.add(new_comb)
+#         if new_comb in vector_to_decrease:
+#             vector_to_decrease.remove(new_comb)
+#     vector_to_increase.update(tmp_set)
+
+
+def update_combinations(elem, vector_to_increase):
     tmp_set = set()
     for vec in vector_to_increase:
         new_comb = elem ^ vec
         tmp_set.add(new_comb)
-        if new_comb in vector_to_decrease:
-            vector_to_decrease.remove(new_comb)
+        
     vector_to_increase.update(tmp_set)
 
 

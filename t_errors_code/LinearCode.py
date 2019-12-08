@@ -23,22 +23,32 @@ class LinearCode():
         self._A_matrix_t = []
         linear_comb = func.get_combinations(self._d, self._r)
         illegal_vectors = set(map(func.reduce_xor, linear_comb))
-        legal_vectors = [i for i in range(1, (1 << self._r)) if i not in illegal_vectors]
-        for i in range(self._k):
-            if not legal_vectors:
-                i = 0
-                illegal_vectors = set(map(func.reduce_xor, linear_comb))
-                legal_vectors = [i for i in range(1, (1 << self._r)) if i not in illegal_vectors]
+        # legal_vectors = [i for i in range(1, (1 << self._r)) if i not in illegal_vectors]
+        # for i in range(self._k):
+        #     if not legal_vectors:
+        #         i = 0
+        #         illegal_vectors = set(map(func.reduce_xor, linear_comb))
+        #         legal_vectors = [i for i in range(1, (1 << self._r)) if i not in illegal_vectors]
 
-            new_vector = legal_vectors[random.randint(0, len(legal_vectors) - 1)]
+        #     new_vector = legal_vectors[random.randint(0, len(legal_vectors) - 1)]
+        #     self._A_matrix_t.append(new_vector)
+
+        #     if (self._d - 1 > 2):
+        #         func.update_combinations(new_vector, legal_vectors, illegal_vectors)
+        #     illegal_vectors.add(new_vector)
+
+        #     if new_vector in legal_vectors:
+        #         legal_vectors.remove(new_vector)
+
+        for i in range(self._k):
+            new_vector = random.randint(3, (1 << self._r) - 1)
+            while new_vector in illegal_vectors:
+                new_vector = random.randint(3, (1 << self._r) - 1)
             self._A_matrix_t.append(new_vector)
 
             if (self._d - 1 > 2):
-                func.update_combinations(new_vector, legal_vectors, illegal_vectors)
+                func.update_combinations(new_vector, illegal_vectors)
             illegal_vectors.add(new_vector)
-
-            if new_vector in legal_vectors:
-                legal_vectors.remove(new_vector)
 
         # self._A_matrix_t = [5, 6, 7, 3]
         self._A_matrix = func.transpose_matrix(self._A_matrix_t, self._r)
