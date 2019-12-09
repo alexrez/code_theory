@@ -20,7 +20,7 @@ class LinearCode():
 
 
     def make_A_matrix(self):
-        self._A_matrix_t = []
+        A_matrix_t = []
         linear_comb = func.get_combinations(self._d, self._r)
         illegal_vectors = set(map(func.reduce_xor, linear_comb))
         # legal_vectors = [i for i in range(1, (1 << self._r)) if i not in illegal_vectors]
@@ -31,7 +31,7 @@ class LinearCode():
         #         legal_vectors = [i for i in range(1, (1 << self._r)) if i not in illegal_vectors]
 
         #     new_vector = legal_vectors[random.randint(0, len(legal_vectors) - 1)]
-        #     self._A_matrix_t.append(new_vector)
+        #     A_matrix_t.append(new_vector)
 
         #     if (self._d - 1 > 2):
         #         func.update_combinations(new_vector, legal_vectors, illegal_vectors)
@@ -44,14 +44,14 @@ class LinearCode():
             new_vector = random.randint(3, (1 << self._r) - 1)
             while new_vector in illegal_vectors:
                 new_vector = random.randint(3, (1 << self._r) - 1)
-            self._A_matrix_t.append(new_vector)
+            A_matrix_t.append(new_vector)
 
             if (self._d - 1 > 2):
                 func.update_combinations(new_vector, illegal_vectors)
             illegal_vectors.add(new_vector)
 
-        # self._A_matrix_t = [5, 6, 7, 3]
-        self._A_matrix = func.transpose_matrix(self._A_matrix_t, self._r)
+        # A_matrix_t = [5, 6, 7, 3]
+        self._A_matrix = func.transpose_matrix(A_matrix_t, self._r)
 
 
     def make_H_matrix_t(self):
@@ -116,7 +116,8 @@ class LinearCode():
 
 
     def __repr__(self):
-        G_to_print = [i | a for i, a in zip([1 << (self._n - 1 - j) for j in range(self._k)], self._A_matrix_t)]
+        A_matrix_t = func.transpose_matrix(self._A_matrix, self._k)
+        G_to_print = [i | a for i, a in zip([1 << (self._n - 1 - j) for j in range(self._k)], A_matrix_t)]
 
         G_to_print = '[\n ' +\
                      '\n '.join(['{0:0>{width}b}'.format(row, width=self._n) for row in G_to_print]) +\
