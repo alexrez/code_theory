@@ -1,4 +1,4 @@
-usage: bch_interactive.p
+usage: bch_interactive.py
 
 BCH error-correcting code.
 
