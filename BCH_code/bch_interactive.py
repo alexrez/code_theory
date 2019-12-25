@@ -47,7 +47,7 @@ if __name__ == '__main__':
             int_mes, str_message = func.join_message(decoded_message, bch_code._k)
             print('Binary: {}\nASCII: {}'.format(''.join(['{0:b}'.format(m) for m in int_mes]), str_message))
 
-            print('\n\t======\tOne more cycle\t=====\n')
+            print('\n\t=======\tOne more cycle\t======\n')
 
     except exceptions as err:
         print("\n{}\n".format(err))

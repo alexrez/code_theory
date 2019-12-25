@@ -131,6 +131,7 @@ def split_message(text, k):
     len_m = 8
     concat_mes = bin_to_str(bin_message, len_m)
     split_mes = [concat_mes[i: i + k] for i in range(0, len(concat_mes), k)]
+
     if len(split_mes[-1]) < k:
         split_mes[-1] += '0' * (k - len(split_mes[-1]))
     return  list(int(m, 2) for m in split_mes)
@@ -140,6 +141,7 @@ def join_message(bin_text, k):
     concat_mes = bin_to_str(bin_text, k)
     len_m = 8
     message_to_decode = [int(concat_mes[i: i + len_m], 2) for i in range(0, len(concat_mes), len_m)]
+    
     while message_to_decode[-1] == 0:
         message_to_decode = message_to_decode[:-1]
     return message_to_decode, ''.join(message_to_ascii(message_to_decode))
