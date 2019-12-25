@@ -39,14 +39,15 @@ if __name__ == '__main__':
             print('\nDecoding:')
             decoded_message, found_errors = bch_code.decode(message_to_decode)
             for i in range(len(message_to_decode)):
-                print('encoded: {0:>0{width}b}\t<>\terror: {1:>0{width}b}\t<>\tdecoded: {2:>0{width_d}b}'.
-                    format(message_to_decode[i], found_errors[i], decoded_message[i], width=bch_code._n, width_d=bch_code._k))
+                print('encoded: {0:>0{width}b}\t<>\terror: {1:>0{width}b}\t<>\tdecoded: {2:>0{width_d}b}\t<>\tstatus: {3}'.
+                    format(message_to_decode[i], found_errors[i], decoded_message[i], 'OK' if bin_message[i] == decoded_message[i] else 'FAIL',
+                        width=bch_code._n, width_d=bch_code._k))
 
             print('\nResult:')
-            str_message = func.join_message(decoded_message, bch_code._k)
-            print('nBinary: {}\nASCII: {}'.format(''.join(['{0:b}'.format(m) for m in decoded_message]), str_message))
+            int_mes, str_message = func.join_message(decoded_message, bch_code._k)
+            print('Binary: {}\nASCII: {}'.format(''.join(['{0:b}'.format(m) for m in int_mes]), str_message))
 
-            print('\n\tOne more cycle\n')
+            print('\n\t======\tOne more cycle\t=====\n')
 
     except exceptions as err:
         print("\n{}\n".format(err))

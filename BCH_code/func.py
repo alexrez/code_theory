@@ -122,96 +122,27 @@ def message_to_ascii(bin_text):
     return [chr(b) for b in bin_text]
 
 
+def bin_to_str(bin_text, width):
+    return ''.join(['{0:>0{w}b}'.format(t, w=width) for t in bin_text])
+
+
 def split_message(text, k):
     bin_message = message_to_bin(text)
-    off_set = 0
-    message_to_encode = []
-    block_mask = (1 << k) - 1
     len_m = 8
-
-    for bin_m in bin_message:
-        tmp_blocks = []
-        new_off_set = (len_m - off_set) % k
-        if new_off_set != 0:
-            off_set_mask = (1 << new_off_set) -1
-            tmp_blocks.append((bin_m & off_set_mask) << (k - new_off_set))
-            bin_m = bin_m >> new_off_set
-
-        for _ in range((len_m - new_off_set) // k):
-            tmp_blocks.append(bin_m & block_mask)
-            bin_m = bin_m >> k
-
-        if off_set != 0:
-            message_to_encode[-1] ^= bin_m
-
-        message_to_encode += tmp_blocks[ : : -1]
-        off_set = k - new_off_set
-
-    return message_to_encode
+    concat_mes = bin_to_str(bin_message, len_m)
+    split_mes = [concat_mes[i: i + k] for i in range(0, len(concat_mes), k)]
+    if len(split_mes[-1]) < k:
+        split_mes[-1] += '0' * (k - len(split_mes[-1]))
+    return  list(int(m, 2) for m in split_mes)
 
 
 def join_message(bin_text, k):
-    # join_text = 1
-    # for block in bin_text:
-    #     join_text = join_text << k
-    #     join_text ^= block
-
-    # mask = (1 << len(bin_text) * k) - 1
-
-    # len_m = 8
-    # block_mask = (1 << len_m) - 1
-    # len_text = math.ceil(len(bin_text) * k / len_m) - 1
-    # print(len_text)
-    # message_to_decode = [((join_text & mask) >> ((len_text - i) * len_m)) & block_mask  for i in range(1, len_text + 1)]
-    # print('{0:b}\t'.format(join_text & mask), '|'.join(['{0:b}'.format(m) for m in message_to_decode]))
-    # print(message_to_decode)
-
-    off_set = 0
-    message_to_decode = []
+    concat_mes = bin_to_str(bin_text, k)
     len_m = 8
-    i = 0
-
-    for i_block in range(math.ceil(len(bin_text) * k / len_m)):
-        block = 0
-        new_off_set = (len_m - off_set) % k
-        len_block = off_set
-        
-        if off_set != 0:
-            block = message_to_decode.pop()
-            if (len_block + k) < len_m:
-                block = block << k
-            else:
-                block = block << (len_m - len_block)
-        
-        for j in range((len_m - off_set - new_off_set) // k):
-            block |= bin_text[i]
-            len_block += k
-            print(len_block + k, (len_m - len_block))
-            if (len_block + k) < len_m:
-                block = block << k
-            else:
-                block = block << (len_m - len_block)
-            i += 1
-    
-        if new_off_set != 0:
-            block |= bin_text[i] >> (k - new_off_set)
-            off_set_mask = (1 << (k - new_off_set)) -1
-            bin_m = bin_text[i] & off_set_mask
-            i += 1
-
-        message_to_decode.append(block)
-
-        if new_off_set != 0:
-            message_to_decode.append(bin_m)
-        off_set = (k - new_off_set) % k
-
-        if i >= len(bin_text):
-            break
-
-    if message_to_decode[-1] == 0:
+    message_to_decode = [int(concat_mes[i: i + len_m], 2) for i in range(0, len(concat_mes), len_m)]
+    while message_to_decode[-1] == 0:
         message_to_decode = message_to_decode[:-1]
-
-    return ''.join(message_to_ascii(message_to_decode))
+    return message_to_decode, ''.join(message_to_ascii(message_to_decode))
 
 
 
